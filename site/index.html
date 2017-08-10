@@ -21,7 +21,15 @@
 			border-bottom: 0rem solid #727e96;
 		}
 		.bar .bar-item {
-			background: #73d019;
+			background: #9acc14;
+		}
+		.bar {
+			background: #4e4e4e;
+		}
+		tbody tr:first-child td .tile .tile-content:before {
+			font-family: FontAwesome;
+		    content: "\f005   " !important;
+		    color: #ffb860;
 		}
 	</style>
 </head>
@@ -47,14 +55,35 @@
 			<div class="column col-12 col-xs-12 col-sm-12 col-md-12">
 				<table class="table table-striped">
 					<thead>
-						<tr>
-							<th>Name</th>
-							<th style="width: 600px;">Progression</th>
-							<th>Rank</th>
-							<th>Overall Points</th>
+						<tr style="text-align: center;"">
+							<th style="width: 130px;">Name</th>
+							<th>Progression</th>
+							<th style="width: 100px;">Progression</th>
+							<th style="width: 70px;">Flag</th>
+							<th style="width: 50px;">Rank</th>
 						</tr>
 					</thead>
 					<tbody id="content-list">
+					<tr class="text-center"><td><div class="tile tile-centered tooltip" data-tooltip="demo"><div class="tile-icon"><img src="https://www.root-me.org/local/cache-vignettes/L64xH64/auton7416-97761.jpg" class="avatar"></div><div class="tile-content">0deer</div></div></td>
+
+					<td>
+						<div class="bar">
+						<div class="bar-item" style="width:5%;"></div>
+  						<div class="bar-item" style="width:9%;background:#818bd5;"></div>
+						<div class="bar-item" style="width:15;background:#818bd5;"></div>
+						<div class="bar-item" style="width:3%;background:#818bd5;"></div>
+						<div class="bar-item" style="width:5%;background:#818bd5;"></div>
+						<div class="bar-item" style="width:4%;background:#818bd5;"></div>
+						<div class="bar-item" style="width:14%;background:#818bd5;"></div>
+						<div class="bar-item" style="width:5%;background:#818bd5;"></div>
+						<div class="bar-item" style="width:4%;background:#818bd5;"></div>
+						<div class="bar-item" style="width:4%;background:#818bd5;"></div>
+						<div class="bar-item" style="width:4%;background:#818bd5;"></div>
+						</div>
+					</td>
+					
+
+					<td><div class="bar"><div class="bar-item tooltip" data-tooltip="hacker 7410/11390" role="progressbar" style="width:65.05706760316066%;" aria-valuenow="65.05706760316066%" aria-valuemin="0" aria-valuemax="100">7410</div></div></td><td class="tooltip" data-tooltip="218/275">218</td><td>37</td></tr>
 					</tbody>
 				</table>
 			</div>
@@ -69,12 +98,13 @@
 	<script src="users.json"></script>
 	<script type="text/javascript">
 		$.getJSON("http://halloffame.local/users.json", function( data ) {
-/*			console.log(data['total_points'])
-			console.log(data['total_challenge'])*/
-		  	$.each( data['users'], function( key, val ) {
-		  		//console.log(key, val)
-		  		$("#content-list").append('<tr class="text-center"><td><div class="tile tile-centered"><div class="tile-icon"><img src="' + val.avatar + '" class="avatar"></div><div class="tile-content">' + val.username + '</div></div></td><td><div class="bar"><div class="bar-item" role="progressbar" style="width:'+ (val.points*100)/data['total_points'] +'%;" aria-valuenow="'+ (val.points*100)/data['total_points'] +'%" aria-valuemin="0" aria-valuemax="100"></div></div></td><td>' + val.rank + '</td><td>' + val.points + '</td></tr>');	
-		    });
+			data['users'].sort(function(a, b) {
+				return a.rank - b.rank;
+			});
+			data['users'].sort();
+			$.each( data['users'], function( key, val ) {
+				//$("#content-list").append('<tr class="text-center"><td><div class="tile tile-centered tooltip" data-tooltip="'+ val.realn +'"><div class="tile-icon"><img src="' + val.avatar + '" class="avatar"></div><div class="tile-content">' + val.username_r + '</div></div></td><td><div class="bar"><div class="bar-item tooltip" data-tooltip="'+ val.status + ' ' + val.points + '/'+ data['total_points'] +'" role="progressbar" style="width:'+ (val.points*100)/data['total_points'] +'%;" aria-valuenow="'+ (val.points*100)/data['total_points'] +'%" aria-valuemin="0" aria-valuemax="100">'+ val.points +'</div></div></td><td class="tooltip" data-tooltip="'+ val.challenges + '/' + data['total_challenge'] +'">' + val.challenges + '</td><td>' + val.rank + '</td></tr>');	
+			});
 		});	
 	</script>
 </body>
