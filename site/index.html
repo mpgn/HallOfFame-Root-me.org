@@ -36,23 +36,20 @@
 <body style="background: #232323;color:#c3c3c3;">
 	<header class="navbar" style="background: #171717;">
 		<section class="navbar-section">
-			<!-- <a href="#" class="navbar-brand mr-10">Spectre.css</a>
-			<a href="#" class="btn btn-link">Docs</a>
-			<a href="https://github.com/picturepan2/spectre" class="btn btn-link">GitHub</a> -->
 		</section>
 		<section class="navbar-center">
 			<h2> Hall Of Fame Root-Me </h2>
 		</section>
 		<section class="navbar-section">
 			<div class="input-group input-inline">
-			<!-- <input class="form-input" type="text" placeholder="search" />
-			<button class="btn btn-primary input-group-btn">Search</button> -->
 			</div>
 		</section>
 	</header>
 	<div class="container grid-960">
 		<div class="columns">
 			<div class="column col-12 col-xs-12 col-sm-12 col-md-12">
+				<i class="fa fa-trophy" aria-hidden="true"></i> : 100% challenges flagged &nbsp
+				<i class="fa fa-star" aria-hidden="true"></i> : Leader of the Hall of Fame
 				<table class="table table-striped">
 					<thead>
 						<tr style="text-align: center;">
@@ -61,7 +58,7 @@
 							<th style="width: 100px;">Overall</th>
 							<th style="width: 70px;">Flag</th>
 							<th style="width: 50px;">Rank</th>
-							<th style="width: 100px;">gO</th>
+							<th style="width: 100px;">Trophy</th>
 						</tr>
 					</thead>
 					<tbody id="content-list">
@@ -108,9 +105,9 @@
 				+		'<td id="trophy_' + val.username_r + '"></td>'
 				+	'</tr>');
 				$.each( val['details'], function( key_c, categorie ) {
-					$("#" + val.username_r).append('<div class="bar-item tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + '" role="progressbar" style="width:' + (categorie.flag*100)/data['total_challenge'] +'%;background:'+ categorie.color +';" aria-valuenow="100%" aria-valuemin="0" aria-valuemax="100"></div>');
+					$("#" + val.username_r).append('<div class="bar-item tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + ' - ' + (categorie.total - categorie.flag) + ' left" role="progressbar" style="width:' + (categorie.flag*100)/data['total_challenge'] +'%;background:'+ categorie.color +';" aria-valuenow="100%" aria-valuemin="0" aria-valuemax="100"></div>');
 					if(categorie.flag == categorie.total) {
-						$("#trophy_" + val.username_r).append('<i class="fa fa-trophy tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + '" aria-hidden="true" style="color:'+ categorie.color +';"></i>');
+						$("#trophy_" + val.username_r).append('<i class="fa fa-trophy tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + '" aria-hidden="true" style="color:+ categorie.color +;"></i>');
 					}
 
 				});

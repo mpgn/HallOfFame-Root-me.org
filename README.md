@@ -1,8 +1,8 @@
-# HallOfFame
+# HallOfFame Root-me
 
-Hall Of Fame dashboard  for Root-me.org. All users are manually added to the file `users.json`, then with a cron job, the script `update.py` do the rest.
+Hall Of Fame dashboard for Root-me.org. Users information are in the `users.json`.
 
-![screenshot](https://i.gyazo.com/1823b9244ef0c4c98d5877f837880dda.png)
+![screenshot](https://i.gyazo.com/56b4c6fcc5c5306e3d904735c0716835.png)
 
 ## Informations
 
@@ -12,12 +12,13 @@ Since root-me doesn't have any API, this is dirty parsing ! But it's working ;)
 
 Add the user in the `users.json` like this :
 ```
-python update.py 'username' 'realname'
+python update.py username realname
 ```
+You can get the useranme form the url of a Root-me profile : https://www.root-me.org/username
 
-Update the json like this :
+Update the json like this : 
 ```
-python3 update.py
+python3 update.py update
 ```
 
 Use a cron job to update the script every night ;)
