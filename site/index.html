@@ -21,40 +21,48 @@
 			border-bottom: 0rem solid #727e96;
 		}
 		.bar .bar-item {
-			background: #73d019;
+			background: #9acc14;
+		}
+		.bar {
+			background: #4e4e4e;
+		}
+		tbody tr:first-child td .tile .tile-content:before {
+			font-family: FontAwesome;
+		    content: "\f005   " !important;
+		    color: #ffb860;
 		}
 	</style>
 </head>
 <body style="background: #232323;color:#c3c3c3;">
 	<header class="navbar" style="background: #171717;">
 		<section class="navbar-section">
-			<!-- <a href="#" class="navbar-brand mr-10">Spectre.css</a>
-			<a href="#" class="btn btn-link">Docs</a>
-			<a href="https://github.com/picturepan2/spectre" class="btn btn-link">GitHub</a> -->
 		</section>
 		<section class="navbar-center">
 			<h2> Hall Of Fame Root-Me </h2>
 		</section>
 		<section class="navbar-section">
 			<div class="input-group input-inline">
-			<!-- <input class="form-input" type="text" placeholder="search" />
-			<button class="btn btn-primary input-group-btn">Search</button> -->
 			</div>
 		</section>
 	</header>
 	<div class="container grid-960">
 		<div class="columns">
 			<div class="column col-12 col-xs-12 col-sm-12 col-md-12">
+				<i class="fa fa-trophy" aria-hidden="true"></i> : 100% of challenges flagged in a category &nbsp
+				<i class="fa fa-star" aria-hidden="true"></i> : Leader of the Hall of Fame
 				<table class="table table-striped">
 					<thead>
-						<tr>
-							<th>Name</th>
-							<th style="width: 600px;">Progression</th>
-							<th>Rank</th>
-							<th>Overall Points</th>
+						<tr style="text-align: center;">
+							<th style="width: 130px;">Name</th>
+							<th>Challenges</th>
+							<th style="width: 100px;">Overall</th>
+							<th style="width: 70px;">Flag</th>
+							<th style="width: 50px;">Rank</th>
+							<th style="width: 100px;">Trophy</th>
 						</tr>
 					</thead>
 					<tbody id="content-list">
+						
 					</tbody>
 				</table>
 			</div>
@@ -68,13 +76,42 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="users.json"></script>
 	<script type="text/javascript">
-		$.getJSON("http://halloffame.local/users.json", function( data ) {
-/*			console.log(data['total_points'])
-			console.log(data['total_challenge'])*/
-		  	$.each( data['users'], function( key, val ) {
-		  		//console.log(key, val)
-		  		$("#content-list").append('<tr class="text-center"><td><div class="tile tile-centered"><div class="tile-icon"><img src="' + val.avatar + '" class="avatar"></div><div class="tile-content">' + val.username + '</div></div></td><td><div class="bar"><div class="bar-item" role="progressbar" style="width:'+ (val.points*100)/data['total_points'] +'%;" aria-valuenow="'+ (val.points*100)/data['total_points'] +'%" aria-valuemin="0" aria-valuemax="100"></div></div></td><td>' + val.rank + '</td><td>' + val.points + '</td></tr>');	
-		    });
+		$.getJSON("http://halloffame.local:8080/users.json", function( data ) {
+			data['users'].sort(function(a, b) {
+				return a.rank - b.rank;
+			});
+			data['users'].sort();
+			console.log(data['users'])
+			$.each( data['users'], function( key, val ) {
+				$("#content-list").append(''
+				+	'<tr class="text-center">'
+				+		'<td>'
+				+			'<div class="tile tile-centered tooltip" data-tooltip="'+ val.realn +'"><div class="tile-icon"><img src="' + val.avatar + '" class="avatar">'
+				+			'</div>'
+				+			'<div class="tile-content">' + val.username_r + '</div>'
+				+			'</div>'
+				+		'</td>'
+				+		'<td>'
+				+			'<div class="bar" id="' + val.username_r + '">'
+				+			'</div>'
+				+		'</td>'
+				+		'<td>'
+				+			'<div class="bar">'
+				+				'<div class="bar-item tooltip" data-tooltip="'+ val.status + ' ' + val.points + '/'+ data['total_points'] +'" role="progressbar" style="width:'+ (val.points*100)/data['total_points'] +'%;" aria-valuenow="'+ (val.points*100)/data['total_points'] +'%" aria-valuemin="0" aria-valuemax="100">'+ val.points +'</div>'
+				+			'</div>'
+				+		'</td>'
+				+		'<td class="tooltip" data-tooltip="'+ val.challenges + '/' + data['total_challenge'] +'">' + val.challenges + '</td>'
+				+		'<td>' + val.rank + '</td>'
+				+		'<td id="trophy_' + val.username_r + '"></td>'
+				+	'</tr>');
+				$.each( val['details'], function( key_c, categorie ) {
+					$("#" + val.username_r).append('<div class="bar-item tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + ' - ' + (categorie.total - categorie.flag) + ' left" role="progressbar" style="width:' + (categorie.flag*100)/data['total_challenge'] +'%;background:'+ categorie.color +';" aria-valuenow="100%" aria-valuemin="0" aria-valuemax="100"></div>');
+					if(categorie.flag == categorie.total) {
+						$("#trophy_" + val.username_r).append('<i class="fa fa-trophy tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + '" aria-hidden="true" style="color:+ categorie.color +;"></i>');
+					}
+
+				});
+			});
 		});	
 	</script>
 </body>
