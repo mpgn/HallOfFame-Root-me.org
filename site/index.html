@@ -76,7 +76,7 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="users.json"></script>
 	<script type="text/javascript">
-		$.getJSON("http://halloffame.local:8080/users.json", function( data ) {
+		$.getJSON("/users.json", function( data ) {
 			data['users'].sort(function(a, b) {
 				return a.rank - b.rank;
 			});
