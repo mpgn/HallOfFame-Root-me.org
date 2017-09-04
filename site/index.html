@@ -1,118 +1,120 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Hall Of Fame Root-Me</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="css/spectre.min.css" />
-	<link rel="stylesheet" href="css/spectre-exp.min.css" />
-	<link rel="stylesheet" href="css/spectre-icons.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-	<style type="text/css">
-		a {
-			color: #9acc14;
-		}
-		.table.table-striped tbody tr:nth-of-type(odd) {
-			background: rgb(49, 49, 49);
-		}
-		.table td {
-			border-bottom: 0rem solid #f0f1f4;
-		}
-		.table th {
-			border-bottom: 0rem solid #727e96;
-		}
-		.bar .bar-item {
-			background: #9acc14;
-		}
-		.bar {
-			background: #4e4e4e;
-		}
-		tbody tr:first-child td .tile .tile-content:before {
-			font-family: FontAwesome;
-		    content: "\f005   " !important;
-		    color: #ffb860;
-		}
-	</style>
+		<title>Hall Of Fame Root-Me</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="css/spectre.min.css" />
+		<link rel="stylesheet" href="css/spectre-exp.min.css" />
+		<link rel="stylesheet" href="css/spectre-icons.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+		<style type="text/css">
+				a {color: #c3c3c3;}
+				a:visited{ color: #c3c3c3;}
+				a:hover { color: #c3c3c3; text-decoration: none;}
+				a:active { color: #c3c3c3;}
+				.table.table-striped tbody tr:nth-of-type(odd) {
+						background: rgb(49, 49, 49);
+				}
+				.table td {
+						border-bottom: 0rem solid #f0f1f4;
+				}
+				.table th {
+						border-bottom: 0rem solid #727e96;
+				}
+				.bar .bar-item {
+						background: #9acc14;
+				}
+				.bar {
+						background: #4e4e4e;
+				}
+				tbody tr:first-child td .tile .tile-content:before {
+						font-family: FontAwesome;
+					content: "\f005   " !important;
+					color: #ffb860;
+				}
+		</style>
 </head>
 <body style="background: #232323;color:#c3c3c3;">
-	<header class="navbar" style="background: #171717;">
-		<section class="navbar-section">
-		</section>
-		<section class="navbar-center">
-			<h2> Hall Of Fame Root-Me </h2>
-		</section>
-		<section class="navbar-section">
-			<div class="input-group input-inline">
-			</div>
-		</section>
-	</header>
-	<div class="container grid-960">
-		<div class="columns">
-			<div class="column col-12 col-xs-12 col-sm-12 col-md-12">
-				<i class="fa fa-trophy" aria-hidden="true"></i> : 100% of challenges flagged in a category &nbsp
-				<i class="fa fa-star" aria-hidden="true"></i> : Leader of the Hall of Fame
-				<table class="table table-striped">
-					<thead>
-						<tr style="text-align: center;">
-							<th style="width: 130px;">Name</th>
-							<th>Challenges</th>
-							<th style="width: 100px;">Overall</th>
-							<th style="width: 70px;">Flag</th>
-							<th style="width: 50px;">Rank</th>
-							<th style="width: 100px;">Trophy</th>
-						</tr>
-					</thead>
-					<tbody id="content-list">
-						
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<footer class="bg-white" style="margin-top: 50px;">
-			<section id="copyright" class="grid-footer container grid-960">
-			  <p style="float: right;">Built with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://twitter.com/mpgn_x64/" target="_blank">@mpgn_x64</a></p>
-			</section>
-		</footer>
-	</div>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="users.json"></script>
-	<script type="text/javascript">
-		$.getJSON("/users.json", function( data ) {
-			data['users'].sort(function(a, b) {
-				return a.rank - b.rank;
-			});
-			data['users'].sort();
-			console.log(data['users'])
-			$.each( data['users'], function( key, val ) {
-				$("#content-list").append(''
-				+	'<tr class="text-center">'
-				+		'<td>'
-				+			'<div class="tile tile-centered tooltip" data-tooltip="'+ val.realn +'"><div class="tile-icon"><img src="' + val.avatar + '" class="avatar">'
-				+			'</div>'
-				+			'<div class="tile-content">' + val.username_r + '</div>'
-				+			'</div>'
-				+		'</td>'
-				+		'<td>'
-				+			'<div class="bar" id="' + val.username_r + '">'
-				+			'</div>'
-				+		'</td>'
-				+		'<td>'
-				+			'<div class="bar">'
-				+				'<div class="bar-item tooltip" data-tooltip="'+ val.status + ' ' + val.points + '/'+ data['total_points'] +'" role="progressbar" style="width:'+ (val.points*100)/data['total_points'] +'%;" aria-valuenow="'+ (val.points*100)/data['total_points'] +'%" aria-valuemin="0" aria-valuemax="100">'+ val.points +'</div>'
-				+			'</div>'
-				+		'</td>'
-				+		'<td class="tooltip" data-tooltip="'+ val.challenges + '/' + data['total_challenge'] +'">' + val.challenges + '</td>'
-				+		'<td>' + val.rank + '</td>'
-				+		'<td id="trophy_' + val.username_r + '"></td>'
-				+	'</tr>');
-				$.each( val['details'], function( key_c, categorie ) {
-					$("#" + val.username_r).append('<div class="bar-item tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + ' - ' + (categorie.total - categorie.flag) + ' left" role="progressbar" style="width:' + (categorie.flag*100)/data['total_challenge'] +'%;background:'+ categorie.color +';" aria-valuenow="100%" aria-valuemin="0" aria-valuemax="100"></div>');
-					if(categorie.flag == categorie.total) {
-						$("#trophy_" + val.username_r).append('<i class="fa fa-trophy tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + '" aria-hidden="true" style="color:+ categorie.color +;"></i>');
-					}
+		<header class="navbar" style="background: #171717;">
+				<section class="navbar-section">
+				</section>
+				<section class="navbar-center">
+						<h2> Hall Of Fame Root-Me </h2>
+				</section>
+				<section class="navbar-section">
+						<div class="input-group input-inline">
+						</div>
+				</section>
+		</header>
+		<div class="container grid-960">
+				<div class="columns">
+						<div class="column col-12 col-xs-12 col-sm-12 col-md-12">
+								<i class="fa fa-trophy" aria-hidden="true"></i> : 100% of challenges flagged in a category &nbsp
+								<i class="fa fa-star" aria-hidden="true"></i> : Leader of the Hall of Fame
+								<table class="table table-striped">
+										<thead>
+												<tr style="text-align: center;">
+														<th style="width: 130px;">Name</th>
+														<th>Challenges</th>
+														<th style="width: 100px;">Overall</th>
+														<th style="width: 70px;">Flag</th>
+														<th style="width: 50px;">Rank</th>
+														<th style="width: 100px;">Trophy</th>
+												</tr>
+										</thead>
+										<tbody id="content-list">
 
+										</tbody>
+								</table>
+						</div>
+				</div>
+				<footer class="bg-white" style="margin-top: 50px;">
+						<section id="copyright" class="grid-footer container grid-960">
+						  <p style="float: right;">Built with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://twitter.com/mpgn_x64/" target="_blank">@mpgn_x64</a></p>
+						</section>
+				</footer>
+		</div>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="users.json"></script>
+		<script type="text/javascript">
+				$.getJSON("/users.json", function( data ) {
+						data['users'].sort(function(a, b) {
+								return a.rank - b.rank;
+						});
+						console.log(data['users'])
+						$.each( data['users'], function( key, val ) {
+								$("#content-list").append(''
+								+       '<tr class="text-center">'
+								+               '<td>'
+								+                       '<a href="https://root-me.org/' + val.username  +  '">'
+								+                               '<div class="tile tile-centered tooltip" data-tooltip="'+ val.realn +'"><div class="tile-icon"><img src="' + val.avatar + '" class="avatar">'
+								+                               '</div>'
+								+                               '<div class="tile-content">' + val.username_r + '</div>'
+								+                               '</div>'
+								+                       '</a>'
+								+               '</td>'
+								+               '<td>'
+								+                       '<div class="bar" id="' + val.username_r + '">'
+								+                       '</div>'
+								+               '</td>'
+								+               '<td>'
+								+                       '<div class="bar">'
+								+                               '<div class="bar-item tooltip" data-tooltip="'+ val.status + ' ' + val.points + '/'+ data['total_points'] +'" role="progressbar" style="width:'+ (val.points*100)/data['total_points'] +'%;" aria-valuenow="'+ (val.points*100)/data['total_points'] +'%" aria-valuemin="0" aria-valuemax="100">'+ val.points +'</div>'
+								+                       '</div>'
+								+               '</td>'
+								+               '<td class="tooltip" data-tooltip="'+ val.challenges + '/' + data['total_challenge'] +'">' + val.challenges + '</td>'
+								+               '<td>' + val.rank + '</td>'
+								+               '<td id="trophy_' + val.username_r + '"></td>'
+								+       '</tr>');
+								$.each( val['details'], function( key_c, categorie ) {
+										$("#" + val.username_r).append('<div class="bar-item tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + ' - ' + (categorie.total - categorie.flag) + ' left" role="progressbar" style="width:' + (categorie.flag*100)/data['total_challenge'] +'%;background:'+ categorie.color +';" aria-valuenow="100%" aria-valuemin="0" aria-valuemax="100"></div>');
+										if(categorie.flag == categorie.total) {
+												$("#trophy_" + val.username_r).append('<i class="fa fa-trophy tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + '" aria-hidden="true" style="color:+ categorie.color +;"></i>');
+										}
+
+								});
+						});
 				});
-			});
-		});	
-	</script>
+		</script>
 </body>
 </html>
