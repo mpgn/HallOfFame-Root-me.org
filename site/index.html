@@ -54,7 +54,7 @@
 								<table class="table table-striped">
 										<thead>
 												<tr style="text-align: center;">
-														<th style="width: 130px;">Name</th>
+														<th style="width: 150px;">Name</th>
 														<th>Challenges</th>
 														<th style="width: 100px;">Overall</th>
 														<th style="width: 70px;">Flag</th>
@@ -77,7 +77,7 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="users.json"></script>
 		<script type="text/javascript">
-				$.getJSON("/users.json", function( data ) {
+				$.getJSON(window.location.pathname + "/users.json", function( data ) {
 						data['users'].sort(function(a, b) {
 								return a.rank - b.rank;
 						});
@@ -94,7 +94,7 @@
 								+                       '</a>'
 								+               '</td>'
 								+               '<td>'
-								+                       '<div class="bar" id="' + val.username_r + '">'
+								+                       '<div class="bar" id="username_' + key + '">'
 								+                       '</div>'
 								+               '</td>'
 								+               '<td>'
@@ -104,12 +104,12 @@
 								+               '</td>'
 								+               '<td class="tooltip" data-tooltip="'+ val.challenges + '/' + data['total_challenge'] +'">' + val.challenges + '</td>'
 								+               '<td>' + val.rank + '</td>'
-								+               '<td id="trophy_' + val.username_r + '"></td>'
+								+               '<td id="trophy_' + key + '"></td>'
 								+       '</tr>');
 								$.each( val['details'], function( key_c, categorie ) {
-										$("#" + val.username_r).append('<div class="bar-item tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + ' - ' + (categorie.total - categorie.flag) + ' left" role="progressbar" style="width:' + (categorie.flag*100)/data['total_challenge'] +'%;background:'+ categorie.color +';" aria-valuenow="100%" aria-valuemin="0" aria-valuemax="100"></div>');
+										$("#username_" + key).append('<div class="bar-item tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + ' - ' + (categorie.total - categorie.flag) + ' left" role="progressbar" style="width:' + (categorie.flag*100)/data['total_challenge'] +'%;background:'+ categorie.color +';" aria-valuenow="100%" aria-valuemin="0" aria-valuemax="100"></div>');
 										if(categorie.flag == categorie.total) {
-												$("#trophy_" + val.username_r).append('<i class="fa fa-trophy tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + '" aria-hidden="true" style="color:+ categorie.color +;"></i>');
+												$("#trophy_" + key).append('<i class="fa fa-trophy tooltip" data-tooltip="'+ categorie.name +' ' + categorie.points + '" aria-hidden="true" style="color:+ categorie.color +;"></i>');
 										}
 
 								});

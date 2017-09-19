@@ -1,4 +1,5 @@
 import json
+import html
 import re
 import requests
 import sys
@@ -14,11 +15,12 @@ def wrong_arg():
 def update_users(user):
 	print("[+] Starting update profil")
 	r = requests.get('https://www.root-me.org/'+ user['username'] + '?inc=score')
+	user['username'] = html.escape(user['username'])
 
 	regex = r'<h1 itemprop="givenName">.*<span .*?>(.*)</span>'
 	matches = re.search(regex, r.text)
 	if matches:
-		user['username_r'] = "{group}".format(group = matches.group(1))
+		user['username_r'] = html.escape("{group}".format(group = matches.group(1)))
 
 	regex = r'<span.*?>\n(.*)<span.*?>/(.*)</span>'
 	matches = re.search(regex, r.text)
@@ -106,7 +108,7 @@ def add_user(username, realn):
 		print("[-] User not found")
 
 def delete_user(username):
-	print("[+] Starting deleting profil")                                                   
+	print("[+] Starting deleting profil")
 	for i in range(len(data['users'])):
 		if data['users'][i]['username'] == username:
 			data['users'].pop(i)
@@ -114,7 +116,23 @@ def delete_user(username):
 				json.dump(data, data_file)
 			print("[+] Profil deleted...") 
 			return
-	print("[-] No profil found with this username")   
+	print("[-] No profil found with this username")
+
+def top_100():
+	print("[+]Get top 100 profile")
+	# get generic data 
+	r = requests.get('https://www.root-me.org/fr/Communaute/Classement/')
+	regex = r'<a href="(.*?)\?.*?>[0-9]+</a>'
+	matches = re.findall(regex, r.text)
+	for username in matches:
+		add_user(username, 'John McClane')
+
+	# get generic data 
+	r = requests.get('https://www.root-me.org/fr/Communaute/Classement/?debut_classement=50')
+	regex = r'<a href="(.*?)\?.*?>[0-9]+</a>'
+	matches = re.findall(regex, r.text)
+	for username in matches:
+		add_user(username, 'John McClane')
 
 # ## STARTING POINT####
 if len(sys.argv) < 2:
@@ -122,6 +140,8 @@ if len(sys.argv) < 2:
 else:
 	if sys.argv[1] == "update":
 		update()
+	elif sys.argv[1] == "top-100":
+		top_100()
 	elif sys.argv[1] == "add" and len(sys.argv) == 4:
 		add_user(sys.argv[2],sys.argv[3])
 	elif sys.argv[1] == "delete" and len(sys.argv) == 3:
