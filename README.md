@@ -14,7 +14,8 @@ Add the user in the `users.json` like this :
 ```
 python update.py username realname
 ```
-You can get the useranme form the url of a Root-me profile : https://www.root-me.org/username
+You can get the useranme form the url of a Root-me profile : https://www.root-me.org/username 
+**/!\ CAUTION: take the username from the URL !**
 
 Update the json like this : 
 ```
@@ -27,6 +28,10 @@ Use a cron job to update the script every night ;)
 
 * 0.0.1
 	* First release
+* 0.0.2
+	* Fix issues
+* 0.0.2
+	* Add delete function
 
 ## Credits
 
