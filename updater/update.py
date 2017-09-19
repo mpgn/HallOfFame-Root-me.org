@@ -8,7 +8,7 @@ with open('../site/users.json', 'r') as data_file:
 
 def wrong_arg():
 	print("[-] Missing or wrong argument")
-	print("[-] Example: \n\tupdate.py update -> to update the json\n\tupdate.py add username realname -> to add a user to the json")
+	print("[-] Example: \n\tupdate.py update -> to update the json\n\tupdate.py add username realname -> to add a user to the json\n\tupdate.py delete username -> to delete username")
 	sys.exit()
 
 def update_users(user):
@@ -105,6 +105,17 @@ def add_user(username, realn):
 	else:
 		print("[-] User not found")
 
+def delete_user(username):
+	print("[+] Starting deleting profil")                                                   
+	for i in range(len(data['users'])):
+		if data['users'][i]['username'] == username:
+			data['users'].pop(i)
+			with open('../site/users.json', 'w') as data_file:
+				json.dump(data, data_file)
+			print("[+] Profil deleted...") 
+			return
+	print("[-] No profil found with this username")   
+
 # ## STARTING POINT####
 if len(sys.argv) < 2:
 	wrong_arg()
@@ -113,6 +124,8 @@ else:
 		update()
 	elif sys.argv[1] == "add" and len(sys.argv) == 4:
 		add_user(sys.argv[2],sys.argv[3])
+	elif sys.argv[1] == "delete" and len(sys.argv) == 3:
+		delete_user(sys.argv[2])
 	else:
 		wrong_arg()
 
