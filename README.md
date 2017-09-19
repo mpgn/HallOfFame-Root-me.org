@@ -8,6 +8,8 @@ Hall Of Fame dashboard for Root-me.org. Users information are in the `users.json
 
 Since root-me doesn't have any API, this is dirty parsing ! But it's working ;)
 
+/!\ The statistics in the demo are not updated every night !
+
 ### Add/Update a user
 
 Add the user in the `users.json` like this :
@@ -23,6 +25,11 @@ python3 update.py update
 ```
 
 Use a cron job to update the script every night ;)
+
+Delete username : 
+```
+python3 update.py delete username
+```
 
 ## History
 
