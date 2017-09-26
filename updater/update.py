@@ -22,23 +22,23 @@ def update_users(user):
 	if matches:
 		user['username_r'] = html.escape("{group}".format(group = matches.group(1)))
 
-	regex = r'<span.*?>\n(.*)<span.*?>/(.*)</span>'
+	regex = r'<span.*?>\n\s+(.*)<span.*?>/(.*)</span>'
 	matches = re.search(regex, r.text)
 	if matches:
 		user['rank'] = "{group}".format(group = matches.group(1))
 		total_rank = "{group}".format(group = matches.group(2))
 
-	regex = r'<span.*?>\n(.*)&nbsp;Points'
+	regex = r'<span.*?>\n\s+(.*)&nbsp;Points'
 	matches = re.search(regex, r.text)
 	if matches:
 		user['points'] = "{group}".format(group = matches.group(1))
 
-	regex = r'<span.*?>\n([a-z]*)&nbsp;'
+	regex = r'<span.*?>\n\s+([a-z]*)&nbsp;'
 	matches = re.search(regex, r.text)
 	if matches:
 		user['status'] = "{group}".format(group = matches.group(1))
 
-	regex = r'<span.*?>\n([0-9]*)/([0-9]*)'
+	regex = r'<span.*?>\n\s+([0-9]*)/([0-9]*)'
 	matches = re.search(regex, r.text)
 	if matches:
 		user['challenges'] = "{group}".format(group = matches.group(1))
@@ -54,7 +54,7 @@ def update_users(user):
 	print("\t Url name", user['username'], "\n\t Username", user['username_r'], "\n\t Realn", user['realn'], "\n\t Avatar", user['avatar'], "\n\t Rank", user['rank'], "\n\t Points", user['points'], "\n\t Challenges succed",user['challenges'], "\n\t Status", user['status'])
 
 	# Get all data from challenge
-	regex = r'<span.*?>\n([0-9]*)&nbsp;Points&nbsp;([0-9]*)/([0-9]*)'
+	regex = r'<span.*?>\n\s+([0-9]*)&nbsp;Points&nbsp;([0-9]*)/([0-9]*)'
 	matches = re.finditer(regex, r.text)
 	for iter_chall, match in enumerate(matches):
 		user['details'][iter_chall]["points"] 	= "{group}".format(group = match.group(1))
@@ -80,7 +80,7 @@ def update():
 		data['total_points'] = "{group}".format(group = matches.group(1))
 
 	r = requests.get('https://www.root-me.org/Capitaine-John?inc=score')
-	regex = r'<span.*?>\n([0-9]*)/([0-9]*)'
+	regex = r'<span.*?>\n\s+([0-9]*)/([0-9]*)'
 	matches = re.search(regex, r.text)
 	if matches:
 		data['total_challenge'] = "{group}".format(group = matches.group(2))
