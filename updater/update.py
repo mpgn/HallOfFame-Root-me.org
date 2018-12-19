@@ -73,11 +73,11 @@ def update():
 	print("[+] Starting Update generic information")
 
 	# get generic data 
-	r = requests.get('https://www.root-me.org/fr/Communaute/Classement/')
-	regex = r'<a href=".*?>([0-9]+)</a>'
-	matches = re.search(regex, r.text)
+	r = requests.get('https://www.root-me.org/Capitaine-John?inc=score')
+	regex = r' title="([0-9]+) Points">'
+	matches = re.findall(regex, r.text, re.MULTILINE)
 	if matches:
-		data['total_points'] = "{group}".format(group = matches.group(1))
+		data['total_points'] = sum([int(i) for i in matches])
 
 	r = requests.get('https://www.root-me.org/Capitaine-John?inc=score')
 	regex = r'<span.*?>[\n]{0,}\s+([0-9]*)/([0-9]*)'
