@@ -17,7 +17,7 @@ def update_users(user):
 	r = requests.get('https://www.root-me.org/'+ user['username'] + '?inc=score')
 	user['username'] = html.escape(user['username'])
 
-	regex = r'<h1 itemprop="givenName">.*<span .*?>(.*)</span></h1>'
+	regex = r'<h1 itemprop="givenName">[\n]{0,}.*[\n]{0,}<span .*?>(.*)</span>&nbsp'
 	matches = re.search(regex, r.text)
 	if matches:
 		user['username_r'] = html.escape("{group}".format(group = matches.group(1)))
@@ -44,7 +44,7 @@ def update_users(user):
 		user['challenges'] = "{group}".format(group = matches.group(1))
 		total_challenge = "{group}".format(group = matches.group(2))
 
-	regex = r'<h1 itemprop="givenName"><img class=\'.*? logo_auteur .*?\' src="(.*?)"'
+	regex = r'<h1 itemprop="givenName">[\n]{0,}<img class=\'.*? logo_auteur .*?\' src="(.*?)"'
 	matches = re.search(regex, r.text)
 	if matches:
 		avatar = "{group}".format(group = matches.group(1))
