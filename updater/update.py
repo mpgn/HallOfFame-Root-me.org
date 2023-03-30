@@ -1,4 +1,5 @@
 import json
+import time
 import html
 import re
 import requests
@@ -15,36 +16,47 @@ def wrong_arg():
 def update_users(user):
 	print("[+] Starting update profil")
 	r = requests.get('https://www.root-me.org/'+ user['username'] + '?inc=score')
+	while r.status_code != 200:
+		print("[-] Too many requests... Sleeping 1 second...")
+		time.sleep(1) # Add delay to bypass root-me requests limitations
+		r = requests.get('https://www.root-me.org/'+ user['username'] + '?inc=score')
+
 	user['username'] = html.escape(user['username'])
 
+	# Username
 	regex = r'<h1 itemprop="givenName">[\n]{0,}.*[\n]{0,}<span .*?>(.*)</span>&nbsp'
 	matches = re.search(regex, r.text)
 	if matches:
 		user['username_r'] = html.escape("{group}".format(group = matches.group(1)))
 
-	regex = r'<span.*?>[\n]{0,}\s+(.*)<span.*?>/(.*)</span>'
+	# Rank
+	regex = r"<h3><img src='.*' .* \/>&nbsp;(.*)<\/h3>[\n]<span .*>Place"
 	matches = re.search(regex, r.text)
 	if matches:
 		user['rank'] = "{group}".format(group = matches.group(1))
-		total_rank = "{group}".format(group = matches.group(2))
+		# total_rank = "{group}".format(group = matches.group(2))
 
-	regex = r'<span.*?>[\n]{0,}\s+(.*)&nbsp;Points'
+	# Points
+	regex = r"<h3><img src='.*' .* />&nbsp;(.*)</h3>[\n]<span .*>Points"
 	matches = re.search(regex, r.text)
 	if matches:
 		user['points'] = "{group}".format(group = matches.group(1))
 
-	regex = r'<span.*?>[\n]{0,}\s+([a-z]*)&nbsp;'
-	matches = re.search(regex, r.text)
+	# Status -> récupéré depuis la page de profil
+	r2 = requests.get('https://www.root-me.org/'+ user['username'])
+	regex = re.escape(user['username_r']) + r'<\/a><\/td>[\n]<td .*\/td>[\n]<td class=".*"><img src=\'.*\' .* title=\'([a-z]*)\''
+	matches = re.search(regex, r2.text)
 	if matches:
 		user['status'] = "{group}".format(group = matches.group(1))
 
-	regex = r'<span.*?>[\n]{0,}\s+([0-9]*)/([0-9]*)'
+	# Challenges
+	regex = r'<h3><img src=\'.*\' .* />&nbsp;(.*)</h3>[\n]<span .*>Challenges</span>'
 	matches = re.search(regex, r.text)
 	if matches:
 		user['challenges'] = "{group}".format(group = matches.group(1))
-		total_challenge = "{group}".format(group = matches.group(2))
+		# total_challenge = "{group}".format(group = matches.group(2))
 
-	regex = r'<h1 itemprop="givenName">[\n]{0,}<img class=\'.*? logo_auteur .*?\' src="(.*?)"'
+	regex = r'<h1 itemprop="givenName">[\n]{0,}<img class=\".*? logo_auteur .*?\" src="(.*?)"'
 	matches = re.search(regex, r.text)
 	if matches:
 		avatar = "{group}".format(group = matches.group(1))
@@ -54,7 +66,7 @@ def update_users(user):
 	print("\t Url name", user['username'], "\n\t Username", user['username_r'], "\n\t Realn", user['realn'], "\n\t Avatar", user['avatar'], "\n\t Rank", user['rank'], "\n\t Points", user['points'], "\n\t Challenges succed",user['challenges'], "\n\t Status", user['status'])
 
 	# Get all data from challenge
-	regex = r'<span.*?>[\n]{0,}\s+([0-9]*)&nbsp;Points&nbsp;([0-9]*)/([0-9]*)'
+	regex = r'<span.*?>[\n]<b>([0-9]*)<\/b>&nbsp;Points<br\/>[\n]<b>([0-9]*)<\/b>&nbsp;\/&nbsp;([0-9]*)'
 	matches = re.finditer(regex, r.text)
 	for iter_chall, match in enumerate(matches):
 		user['details'][iter_chall]["points"] 	= "{group}".format(group = match.group(1))
@@ -65,7 +77,7 @@ def update_users(user):
 		print('\t',detail['name'], detail['points'], detail['flag'], detail['total'])
 
 	with open('../site/users.json', 'w') as data_file:
-		json.dump(data, data_file)
+		json.dump(data, data_file, indent=2)
 
 	print("[+] End update profil")
 
@@ -73,19 +85,19 @@ def update():
 	print("[+] Starting Update generic information")
 
 	# get generic data 
-	r = requests.get('https://www.root-me.org/Capitaine-John?inc=score')
-	regex = r' title="([0-9]+) Points">'
+	r = requests.get('https://www.root-me.org/macz?inc=score')
+	regex = r'<span.*?>[\n]<b>([0-9]*)<\/b>&nbsp;Points'
 	matches = re.findall(regex, r.text, re.MULTILINE)
 	if matches:
 		data['total_points'] = sum([int(i) for i in matches])
 
 	r = requests.get('https://www.root-me.org/Capitaine-John?inc=score')
-	regex = r'<span.*?>[\n]{0,}\s+([0-9]*)/([0-9]*)'
-	matches = re.search(regex, r.text)
+	regex = r'Points<br\/>[\n]<b>[0-9]*<\/b>&nbsp;\/&nbsp;([0-9]*)'
+	matches = re.findall(regex, r.text, re.MULTILINE)
 	if matches:
-		data['total_challenge'] = "{group}".format(group = matches.group(2))
+		data['total_challenge'] = sum([int(i) for i in matches])
 
-	print("\t Total oints", data['total_points'], "\n\t Total challenge", data['total_challenge'])
+	print("\t Total points", data['total_points'], "\n\t Total challenges", data['total_challenge'])
 	print("[+] End of update generic information")
 
 	for user in data['users']:
